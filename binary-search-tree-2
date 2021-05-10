@@ -152,7 +152,17 @@ void recursiveInorder(Node* ptr)
  */
 void iterativeInorder(Node* node)
 {
-	
+	for(;;)
+	{
+		for(; node; node = node->left)
+			push(node);
+		node = pop();
+
+		if(!node) break;
+
+		printf("[%d] ", node->key);
+		node = node->right;
+	}
 }
 
 /**
@@ -160,6 +170,22 @@ void iterativeInorder(Node* node)
  */
 void levelOrder(Node* ptr)
 {
+	if(!ptr) return;
+	enQueue(ptr);
+
+	for(;;)
+	{
+		ptr = deQueue();
+		if(ptr)
+		{
+			printf("[%d] ", ptr->key);
+			if(ptr->left)
+				enQueue(ptr->left);
+			if(ptr->right)
+				enQueue(ptr->right);
+		}
+		else break;
+	}
 }
 
 
@@ -210,39 +236,63 @@ int insert(Node* head, int key)
 int deleteNode(Node* head, int key)
 {
 	Node* ptr = head->left;
-	Node* temp = ptr;
+	Node* prev = ptr;
+	Node* temp = NULL;
 
-	while(ptr != NULL)
+	while(ptr->key != key)
 	{
 		if(ptr->key < key)
 		{
-			temp = ptr;
+			prev = ptr;
 			ptr = ptr->right;
 		}
 		else if (ptr->key > key)
 		{	
-			temp = ptr;
+			prev = ptr;
 			ptr = ptr->left;
 		}
 		else
-		{
 			break;
-		}
 	}
 
-	//right 경우
 	if(ptr->left ==NULL && ptr->right == NULL)
 	{
+		if(prev -> left == ptr)
+			prev->left = NULL;
+		else if (prev ->right == ptr)
+			prev->right = NULL;
 		free(ptr);
 		return 0;
 	}
-	else if(key < ptr->left->key)
+	else if(ptr -> left != NULL && ptr ->right == NULL)
 	{
-		temp -> right = ptr->left;
-		ptr->left->right;
+		prev->left = ptr->left;
+		free(ptr);
+		return 0;
 	}
-
-
+	else if (ptr -> left == NULL && ptr -> right != NULL)
+	{
+		prev->right = ptr->right;
+		free(ptr);
+		return 0;
+	}
+	else
+	{
+		temp = ptr->right;
+		while(temp)
+		{
+			if(temp->left == NULL)
+			{
+				prev->right = temp;
+				free(ptr);
+				return 0;
+			}
+			else
+			{
+				temp = temp->left;
+			}
+		}
+	}
 }
 
 
@@ -276,24 +326,55 @@ int freeBST(Node* head)
 
 Node* pop()
 {
-
+	if(top == -1)
+		return NULL;
+	return stack[top--];
 }
 
 void push(Node* aNode)
 {
-
+	if(top >= MAX_STACK_SIZE)
+		return ;
+	stack[++top] = aNode;
 }
 
 
 
 Node* deQueue()
 {
+	if(front == rear)
+	{
+		return NULL;
+	}
+	return queue[++front];
 }
 
 void enQueue(Node* aNode)
 {
+	if(rear == MAX_QUEUE_SIZE - 1)
+	{
+		return ;
+	}
+	queue[++rear] = aNode;
 }
 
+void printStack()
+{
+	int i;
+	if(top == -1)
+	{
+		printf("empty\n");
+		return ;
+	}
+	else if (top <= MAX_STACK_SIZE)
+	{
+		for(i = 0; i < top; i++)
+		{
+			printf("stack[i] = %d\n", stack[i]->key);
+		}
+		return ;
+	}
+}
 
 
 
