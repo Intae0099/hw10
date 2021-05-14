@@ -288,13 +288,13 @@ int deleteNode(Node* head, int key) //노드 지우가
 	{
 		if(prev->right == ptr) //ptr의 부모노드의 오른쪽 자식노드가 ptr일 경우
 		{
-			prev->right = ptr->left;//부모노드의 오른쪽 자식노드를 ptr의 왼쪽 자식노드로 가르킨다
+			prev->right = ptr->right;//부모노드의 오른쪽 자식노드를 ptr의 오른쪽 자식노드로 가르킨다
 			free(ptr); //ptr노드를 동적할당 해제를 통해삭제
 			return 0; //0을 리턴함으로서 함수 종료	
 		}
 		else if(prev->left == ptr) //ptr의 부모노드의 왼쪽쪽 자식노드가 ptr일 경우
 		{
-			prev->left = ptr->left; //부모노드의 왼쪽 자식노드를 ptr의 왼쪽 자식노드로 가르킨다
+			prev->left = ptr->right; //부모노드의 왼쪽 자식노드를 ptr의 오른 자식노드로 가르킨다
 			free(ptr); //ptr노드를 동적할당 해제를 통해삭제
 			return 0; //0을 리턴함으로서 함수 종료	
 		}
